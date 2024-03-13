@@ -7,36 +7,45 @@ import SignUpPage from './pages/signUp/SignUpPage';
 // import Authenticate from "./components/Authenticate";
 import { SnackbarProvider } from 'notistack';
 import HomePage from './pages/home/HomePage';
+import { Provider } from 'react-redux';
+import { store } from './store/store';
 // import Authenticate from './components/Authenticate';
 
 const AppRouting = createBrowserRouter([
-  {
-    path: '/',
-    element: (
-      <SnackbarProvider
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        SnackbarProvider
-      >
-        <App />
-      </SnackbarProvider>
-    ),
-  },
-  {
-    path: 'sign-in',
-    element: <SignInPage />,
-  },
-  {
-    path: 'sign-up',
-    element: <SignUpPage />,
-  },
-  {
-    path: 'feed',
-    element: <HomePage />,
-  },
 
+  {
+    path:'/',
+    element:
+    <SnackbarProvider
+    anchorOrigin={{
+      vertical: 'top',
+      horizontal: 'right',
+    }}
+    SnackbarProvider
+  >
+    <Provider store={store}>
+
+    <App/>
+    </Provider>
+  </SnackbarProvider>
+    ,
+    children:[
+      {
+        index:true,
+        element: <SignInPage />,
+      },
+      {
+        path: 'sign-up',
+        element: <SignUpPage />,
+      },
+      {
+        path: 'feed',
+        element: <HomePage />,
+      },
+    
+    ]
+  },
+ 
   {
     path: '*',
     element: <ErrorPage />,

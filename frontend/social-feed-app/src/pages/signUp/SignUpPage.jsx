@@ -14,11 +14,21 @@ import { InputAdornment } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { useState } from 'react';
+import { useAddUserMutation } from '../../services/usersApi';
 
 export default function SignUpPage() {
+
+  const [addUser] = useAddUserMutation();
+
+
+
+
   const { register, handleSubmit, control, formState } = useForm();
   const { errors } = formState;
-  const onSubmit = (data) => console.log({ data });
+  const onSubmit = (data) =>{
+    console.log({data});
+    addUser({...data,isPrivate:true});
+  }
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -160,7 +170,7 @@ export default function SignUpPage() {
           <Grid container>
             <Grid item xs></Grid>
             <Grid item>
-              <Link to="/sign-up" variant="body2">
+              <Link to="/sign-in" variant="body2">
                 {'Already a user? Sign In'}
               </Link>
             </Grid>

@@ -2,7 +2,7 @@ import { Button, Container } from '@mui/material';
 import Post from '../../components/Post';
 import { useState } from 'react';
 import CustomDialog from '../../components/CustomDialog';
-import CustomAppBar from '../../components/CustomAppBar';
+
 
 const HomePage = () => {
   const [openPostModal, setOpenPostModal] = useState(false);
@@ -13,7 +13,7 @@ const HomePage = () => {
 
   return (
     <>
-      <CustomAppBar />
+    
       <Container component="main" maxWidth="xs" sx={{ mt: 8 }}>
         <Button
           variant="contained"

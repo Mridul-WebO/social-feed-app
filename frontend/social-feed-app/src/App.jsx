@@ -12,7 +12,7 @@ function App() {
 
   return (
     <>
-      {!!sessionStorage.getItem('userData') && <CustomAppBar />}
+      <CustomAppBar />
 
       <Outlet />
     </>

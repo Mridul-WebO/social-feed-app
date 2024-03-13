@@ -47,9 +47,10 @@ export const usersApi = createApi({
     }),
 
     loginUser: builder.mutation({
-      query: () => ({
+      query: (user) => ({
         url: '/login',
         method: 'POST',
+        body:user
       }),
       invalidatesTags: ['User'],
     }),

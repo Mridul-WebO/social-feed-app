@@ -15,6 +15,8 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
+import { useNavigate } from 'react-router-dom';
+import { enqueueSnackbar } from 'notistack';
 
 // const Search = styled('div')(({ theme }) => ({
 //   'position': 'relative',
@@ -60,6 +62,8 @@ export default function CustomAppBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
+  const navigate = useNavigate();
+
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -71,10 +75,22 @@ export default function CustomAppBar() {
     setMobileMoreAnchorEl(null);
   };
 
-  const handleMenuClose = () => {
+  
+
+  const handleLogout = () => {
+
     setAnchorEl(null);
     handleMobileMenuClose();
+    navigate("/")
+    enqueueSnackbar("Logged out successfully!",{variant:"success",autoHideDuration:3000})
   };
+
+  const handleMenuClose = ()=>{
+    setAnchorEl(null);
+    handleMobileMenuClose();
+
+  }
+
 
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
@@ -97,8 +113,8 @@ export default function CustomAppBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={()=>navigate("/feed")}>Profile</MenuItem>
+      <MenuItem onClick={handleLogout}>Logout</MenuItem>
     </Menu>
   );
 

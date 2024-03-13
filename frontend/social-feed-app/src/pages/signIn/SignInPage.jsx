@@ -7,7 +7,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { DevTool } from '@hookform/devtools';
 import { regex } from '../../utils/helperFunctions';
 
@@ -15,14 +15,26 @@ import { InputAdornment } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { useState } from 'react';
+import { useSnackbar } from 'notistack';
 
 export default function SignInPage() {
-  console.log('hello');
+
+   const { enqueueSnackbar } = useSnackbar();
+
+ 
+
+  const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false);
 
   const { register, handleSubmit, control, formState } = useForm();
   const { errors } = formState;
-  const onSubmit = (data) => console.log({ data });
+  const onSubmit = (data) => {
+    console.log({data})
+    navigate("/feed",{replace:true});
+    
+    enqueueSnackbar("Registered user successfully! Please Sign In",  {variant:"success",autoHideDuration:2000} );
+
+  }
 
   return (
     <Container component="main" maxWidth="xs">
