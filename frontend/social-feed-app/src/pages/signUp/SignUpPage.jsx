@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -7,28 +8,55 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { DevTool } from '@hookform/devtools';
 import { regex } from '../../utils/helperFunctions';
-import { InputAdornment } from '@mui/material';
+import { CircularProgress, InputAdornment } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { useState } from 'react';
-import { useAddUserMutation } from '../../services/usersApi';
+import { useSignUpMutation } from '../../store/apis/authApi';
+import { enqueueSnackbar, useSnackbar } from 'notistack';
 
 export default function SignUpPage() {
+  const { enqueueSnackbar } = useSnackbar();
+  const navigate = useNavigate();
 
-  const [addUser] = useAddUserMutation();
-
-
-
+  const [signUp, { isLoading, isSuccess, isError }] = useSignUpMutation();
 
   const { register, handleSubmit, control, formState } = useForm();
   const { errors } = formState;
-  const onSubmit = (data) =>{
-    console.log({data});
-    addUser({...data,isPrivate:true});
-  }
+  const onSubmit = async (submittedData) => {
+    const body = {
+      ...submittedData,
+      isPrivate: true,
+    };
+
+    try {
+      const res = await signUp(body);
+
+      if (res?.data) {
+        navigate('/');
+        enqueueSnackbar(
+          ' Thanks for signing up. A verification link has been sent to to your email. Please check your email inbox, including the spam or junk folder, for a message from',
+          {
+            variant: 'success',
+            autoHideDuration: 6000,
+          }
+        );
+      } else {
+        enqueueSnackbar(res.error.data.message, {
+          variant: 'error',
+          autoHideDuration: 5000,
+        });
+      }
+    } catch (error) {
+      enqueueSnackbar("Couldn't sign up. Please try again after sometime", {
+        variant: 'error',
+        autoHideDuration: 5000,
+      });
+    }
+  };
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -134,11 +162,11 @@ export default function SignUpPage() {
             helperText={errors.password?.message}
             {...register('password', {
               required: 'Password is required',
-              pattern: {
-                value: regex.password,
-                message:
-                  "password must contains 'One UpperCase letter, One lowerCase letter and should be of atleast 8 characters'",
-              },
+              // pattern: {
+              //   value: regex.password,
+              //   message:
+              //     "password must contains 'One UpperCase letter, One lowerCase letter and should be of atleast 8 characters'",
+              // },
             })}
             InputProps={{
               endAdornment: (
@@ -165,12 +193,13 @@ export default function SignUpPage() {
             sx={{ mt: 3, mb: 2 }}
             type="submit"
           >
+            {isLoading && <CircularProgress color="inherit" size={20} />}
             Sign Up
           </Button>
           <Grid container>
             <Grid item xs></Grid>
             <Grid item>
-              <Link to="/sign-in" variant="body2">
+              <Link to="/" variant="body2">
                 {'Already a user? Sign In'}
               </Link>
             </Grid>

@@ -1,19 +1,15 @@
-// import { Button } from '@mui/material';
-// import { useSnackbar } from 'notistack';
+import { useContext } from 'react';
 import CustomAppBar from './components/CustomAppBar';
 import { Outlet } from 'react-router-dom';
+import { Auth } from './context/AuthContext';
 
 function App() {
-  // const { enqueueSnackbar } = useSnackbar();
-
-  // const handleVariant = (variant) => {
-  //   enqueueSnackbar('This is it!!', { variant });
-  // };
+  const { isLoggedIn } = useContext(Auth);
+  console.log('App', { isLoggedIn });
 
   return (
     <>
-      <CustomAppBar />
-
+      {isLoggedIn && <CustomAppBar />}
       <Outlet />
     </>
   );

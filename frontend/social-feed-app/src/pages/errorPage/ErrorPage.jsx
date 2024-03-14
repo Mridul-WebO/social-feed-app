@@ -1,9 +1,5 @@
 const ErrorPage = () => {
-  return (
-    <div>
-      <img src="" alt="" />
-    </div>
-  );
+  return <div>"Error"</div>;
 };
 
 export default ErrorPage;

@@ -9,47 +9,74 @@ import { SnackbarProvider } from 'notistack';
 import HomePage from './pages/home/HomePage';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
+import Context from './context/AuthContext';
+import ProfilePage from './pages/profile/ProfilePage';
+// import Authenticate from './components/Authenticate';
+import Protected from './components/Protected';
+import Authenticate from './components/Authenticate';
+import PostsContext from './context/PostsContext';
+
 // import Authenticate from './components/Authenticate';
 
-const AppRouting = createBrowserRouter([
-
+const appRouting = createBrowserRouter([
   {
-    path:'/',
-    element:
-    <SnackbarProvider
-    anchorOrigin={{
-      vertical: 'top',
-      horizontal: 'right',
-    }}
-    SnackbarProvider
-  >
-    <Provider store={store}>
-
-    <App/>
-    </Provider>
-  </SnackbarProvider>
-    ,
-    children:[
+    path: '/',
+    element: (
+      <SnackbarProvider
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+      >
+        <Provider store={store}>
+          <Context>
+            <App />
+          </Context>
+        </Provider>
+      </SnackbarProvider>
+    ),
+    children: [
       {
-        index:true,
-        element: <SignInPage />,
+        index: true,
+
+        element: (
+          <Authenticate>
+            <SignInPage />
+          </Authenticate>
+        ),
       },
       {
         path: 'sign-up',
-        element: <SignUpPage />,
+        element: (
+          <Authenticate>
+            <SignUpPage />
+          </Authenticate>
+        ),
       },
       {
         path: 'feed',
-        element: <HomePage />,
+        element: (
+          <Protected>
+            <PostsContext>
+              <HomePage />
+            </PostsContext>
+          </Protected>
+        ),
       },
-    
-    ]
+      {
+        path: 'profile',
+        element: (
+          <Protected>
+            <ProfilePage />
+          </Protected>
+        ),
+      },
+    ],
   },
- 
   {
     path: '*',
     element: <ErrorPage />,
   },
 ]);
 
-export default AppRouting;
+export default appRouting;

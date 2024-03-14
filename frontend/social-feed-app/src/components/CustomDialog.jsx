@@ -10,6 +10,8 @@ import { Avatar, Box, Container, TextField } from '@mui/material';
 
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useForm } from 'react-hook-form';
+import { useCreatePostMutation } from '../store/apis/postApi';
+import { Posts } from '../context/PostsContext';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -18,8 +20,19 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function CustomDialog({ openPostModal, setOpenPostModal }) {
   const { register, handleSubmit, formState } = useForm();
   const { errors } = formState;
-  const onSubmit = (data) => {
-    console.log({ data });
+  const [createPost] = useCreatePostMutation();
+
+  const { setNewPosts } = React.useContext(Posts);
+
+  const onSubmit = (submittedData) => {
+    const body = {
+      ...submittedData,
+      isPrivate: false,
+    };
+    createPost(body);
+    setNewPosts(body);
+
+    setOpenPostModal(false);
   };
 
   return (

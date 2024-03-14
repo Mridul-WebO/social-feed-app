@@ -1,9 +1,6 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApiInstance } from './createApiInstance';
 
-export const usersApi = createApi({
-  reducerPath: 'usersApi',
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000' }),
-  tagTypes: ['User'],
+const extendedApi = createApiInstance.injectEndpoints({
   endpoints: (builder) => ({
     fetchAllUsers: builder.query({
       query: () => '/users/get-all-user',
@@ -36,24 +33,6 @@ export const usersApi = createApi({
       }),
       invalidatesTags: ['User'],
     }),
-
-    addUser: builder.mutation({
-      query: (user) => ({
-        url: '/sign-up',
-        method: 'POST',
-        body: user,
-      }),
-      invalidatesTags: ['User'],
-    }),
-
-    loginUser: builder.mutation({
-      query: (user) => ({
-        url: '/login',
-        method: 'POST',
-        body:user
-      }),
-      invalidatesTags: ['User'],
-    }),
   }),
 });
 
@@ -63,6 +42,4 @@ export const {
   useFetchUserProfileQuery,
   useUpdateUserMutation,
   useDeleteUserMutation,
-  useAddUserMutation,
-  useLoginUserMutation,
-} = usersApi;
+} = extendedApi;

@@ -2,7 +2,7 @@ import { Button, Container } from '@mui/material';
 import Post from '../../components/Post';
 import { useState } from 'react';
 import CustomDialog from '../../components/CustomDialog';
-
+import { useFetchAllPostsQuery } from '../../store/apis/postApi';
 
 const HomePage = () => {
   const [openPostModal, setOpenPostModal] = useState(false);
@@ -11,9 +11,10 @@ const HomePage = () => {
     setOpenPostModal(true);
   };
 
+  const { data } = useFetchAllPostsQuery();
+
   return (
     <>
-    
       <Container component="main" maxWidth="xs" sx={{ mt: 8 }}>
         <Button
           variant="contained"
@@ -24,7 +25,11 @@ const HomePage = () => {
         </Button>
         {/* <Paper style={{ maxHeight: 500, minWidth: 500, overflow: 'auto' }}> */}
         {/* <List> */}
-        <Post />
+        {data?.data?.data.map((post) => {
+          return (
+            <Post key={post._id} desc={post.description} title={post.title} />
+          );
+        })}
 
         {/* </List> */}
         {/* </Paper> */}

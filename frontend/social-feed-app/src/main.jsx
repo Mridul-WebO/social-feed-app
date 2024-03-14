@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
-import AppRouting from './AppRouting';
+import appRouting from './appRouting';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <RouterProvider router={AppRouting} />
+  <RouterProvider router={appRouting} />
 );

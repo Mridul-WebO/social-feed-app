@@ -11,30 +11,59 @@ import { Link, useNavigate } from 'react-router-dom';
 import { DevTool } from '@hookform/devtools';
 import { regex } from '../../utils/helperFunctions';
 
-import { InputAdornment } from '@mui/material';
+import { CircularProgress, InputAdornment } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useSnackbar } from 'notistack';
+import { useLoginUserMutation } from '../../store/apis/authApi';
+import { Auth } from '../../context/AuthContext';
 
 export default function SignInPage() {
+  const { enqueueSnackbar } = useSnackbar();
 
-   const { enqueueSnackbar } = useSnackbar();
+  const { handleLoggedInUser } = useContext(Auth);
 
- 
+  const [loginUser, { isLoading }] = useLoginUserMutation();
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
   const { register, handleSubmit, control, formState } = useForm();
   const { errors } = formState;
-  const onSubmit = (data) => {
-    console.log({data})
-    navigate("/feed",{replace:true});
-    
-    enqueueSnackbar("Registered user successfully! Please Sign In",  {variant:"success",autoHideDuration:2000} );
+  const onSubmit = async (submittedData) => {
+    try {
+      const res = await loginUser(submittedData);
 
-  }
+      if (res?.data) {
+        handleLoggedInUser(res.data.data);
+        navigate('/feed');
+
+        enqueueSnackbar('Logged In successfully', {
+          variant: 'success',
+          autoHideDuration: 2000,
+        });
+      } else {
+        enqueueSnackbar(res.error.data.message, {
+          variant: 'error',
+          autoHideDuration: 5000,
+        });
+      }
+    } catch (error) {
+      enqueueSnackbar("Couldn't sign in. Please try again after sometime", {
+        variant: 'error',
+        autoHideDuration: 5000,
+      });
+    }
+
+    // navigate("/feed",{replace:true});
+    // console.log({ result });
+
+    // enqueueSnackbar('Registered user successfully! Please Sign In', {
+    //   variant: 'success',
+    //   autoHideDuration: 2000,
+    // });
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -116,6 +145,7 @@ export default function SignInPage() {
             sx={{ mt: 3, mb: 2 }}
             type="submit"
           >
+            {isLoading && <CircularProgress color="inherit" size={20} />}
             Sign In
           </Button>
           <Grid container>

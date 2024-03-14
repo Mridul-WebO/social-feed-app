@@ -6,17 +6,18 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 // import InputBase from '@mui/material/InputBase';
-import Badge from '@mui/material/Badge';
+
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 // import MenuIcon from '@mui/icons-material/Menu';
 // import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import MailIcon from '@mui/icons-material/Mail';
-import NotificationsIcon from '@mui/icons-material/Notifications';
+
+// import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { enqueueSnackbar } from 'notistack';
+import { Auth } from '../context/AuthContext';
 
 // const Search = styled('div')(({ theme }) => ({
 //   'position': 'relative',
@@ -75,25 +76,32 @@ export default function CustomAppBar() {
     setMobileMoreAnchorEl(null);
   };
 
-  
+  const { handleLoggedOutUser } = React.useContext(Auth);
 
   const handleLogout = () => {
-
     setAnchorEl(null);
     handleMobileMenuClose();
-    navigate("/")
-    enqueueSnackbar("Logged out successfully!",{variant:"success",autoHideDuration:3000})
+    handleLoggedOutUser();
+    navigate('/');
+
+    enqueueSnackbar('Logged out successfully!', {
+      variant: 'success',
+      autoHideDuration: 2000,
+    });
   };
 
-  const handleMenuClose = ()=>{
+  const handleMenuClose = () => {
     setAnchorEl(null);
     handleMobileMenuClose();
-
-  }
-
+  };
 
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
+  };
+
+  const handleProfile = () => {
+    setAnchorEl(false);
+    navigate('/profile');
   };
 
   const menuId = 'primary-search-account-menu';
@@ -113,7 +121,7 @@ export default function CustomAppBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={()=>navigate("/feed")}>Profile</MenuItem>
+      <MenuItem onClick={handleProfile}>Profile</MenuItem>
       <MenuItem onClick={handleLogout}>Logout</MenuItem>
     </Menu>
   );
@@ -135,44 +143,14 @@ export default function CustomAppBar() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
-        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="error">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton
-          size="large"
-          aria-label="show 17 new notifications"
-          color="inherit"
-        >
-          <Badge badgeContent={17} color="error">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
-      </MenuItem>
+      <MenuItem onClick={handleProfile}>Profile</MenuItem>
+      <MenuItem onClick={handleLogout}>Logout</MenuItem>
     </Menu>
   );
 
   return (
     <>
-      <AppBar position="static">
+      <AppBar position="fixed">
         <Toolbar>
           <IconButton
             size="large"
@@ -189,12 +167,17 @@ export default function CustomAppBar() {
             component="div"
             sx={{ display: { xs: 'none', sm: 'block' } }}
           >
-            Rituals
+            <Link
+              style={{ textDecoration: 'none', color: 'inherit' }}
+              to="/feed"
+            >
+              Rituals
+            </Link>
           </Typography>
 
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <IconButton
+            {/* <IconButton
               size="large"
               aria-label="show 17 new notifications"
               color="inherit"
@@ -202,7 +185,7 @@ export default function CustomAppBar() {
               <Badge badgeContent={17} color="error">
                 <NotificationsIcon />
               </Badge>
-            </IconButton>
+            </IconButton> */}
             <IconButton
               size="large"
               edge="end"
