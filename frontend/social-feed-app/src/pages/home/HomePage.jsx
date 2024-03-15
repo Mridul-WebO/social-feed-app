@@ -1,4 +1,4 @@
-import { Button, Container } from '@mui/material';
+import { Button, Container, Grid } from '@mui/material';
 import Post from '../../components/Post';
 import { useState } from 'react';
 import CustomDialog from '../../components/CustomDialog';
@@ -12,27 +12,36 @@ const HomePage = () => {
   };
 
   const { data } = useFetchAllPostsQuery();
+  console.log({data});
 
   return (
     <>
-      <Container component="main" maxWidth="xs" sx={{ mt: 8 }}>
+      <Container component="main" maxWidth="mx" sx={{ mt: 8 }}>
+        <Grid sx={{display:'flex',justifyContent:'end'}} >
         <Button
-          variant="contained"
+        position="fixed"
+          variant="outlined"
           sx={{ my: 5, ml: 15 }}
           onClick={handleCreatePost}
         >
           +Create Post
         </Button>
-        {/* <Paper style={{ maxHeight: 500, minWidth: 500, overflow: 'auto' }}> */}
-        {/* <List> */}
+
+        </Grid>
+        <Grid sx={{display:'flex',flexDirection:'column',alignItems:'center'}}  >
+               
+        {data?.data?.data.length === 0 && <h3>No posts found</h3>}
         {data?.data?.data.map((post) => {
           return (
-            <Post key={post._id} desc={post.description} title={post.title} />
+            <Post key={post._id} desc={post.description} title={post.title} createdAt={post.createdAt} />
           );
         })}
 
-        {/* </List> */}
-        {/* </Paper> */}
+        </Grid>
+     
+
+
+      
       </Container>
       <CustomDialog
         openPostModal={openPostModal}

@@ -19,6 +19,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function CustomDialog({ openPostModal, setOpenPostModal }) {
   const { register, handleSubmit, formState } = useForm();
+
+  const imgInputBtnRef = React.useRef(null);
+  console.log(imgInputBtnRef);
   const { errors } = formState;
   const [createPost] = useCreatePostMutation();
 
@@ -56,14 +59,27 @@ export default function CustomDialog({ openPostModal, setOpenPostModal }) {
                 style={{ cursor: 'pointer' }}
                 sx={{ mx: 25, width: 250, height: 100, borderRadius: 3 }}
                 alt=" Sharp"
+             
               >
-                <CloudUploadIcon />
-                <input
-                  type="file"
-                  accept="image/png, image/gif, image/jpeg"
-                  style={{ display: 'none' }}
-                />
+                <CloudUploadIcon    onClick={()=>imgInputBtnRef.current.onClick()} />
+            
               </Avatar>
+              <TextField
+                  margin="normal"
+                  type='file'
+                  required
+                  fullWidth
+                  id="title"
+                  label="Title"
+                  name="title"
+                  autoComplete="title"
+                  autoFocus
+                  sx={{display:'none'}}
+                  ref={imgInputBtnRef}
+                
+                />
+
+            
 
               <Box
                 component="form"
